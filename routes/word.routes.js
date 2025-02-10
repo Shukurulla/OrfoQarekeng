@@ -184,9 +184,13 @@ router.post("/word/sound", authMiddleware, async (req, res) => {
   try {
     const { userId } = req.userData;
     const { wordId, sound } = req.body;
-    const updateWord = await wordModel.findByIdAndUpdate(wordId, {
-      isChecked: sound,
-    });
+    const updateWord = await wordModel.findByIdAndUpdate(
+      wordId,
+      {
+        isChecked: sound,
+      },
+      { new: true }
+    );
     res.status(200).json({ status: "success", data: updateWord });
   } catch (error) {
     res
