@@ -180,7 +180,7 @@ router.delete("/word/delete/:id", authMiddleware, async (req, res) => {
 //   }
 // });
 
-router.get("/word/sound", authMiddleware, async (req, res) => {
+router.post("/word/sound", authMiddleware, async (req, res) => {
   try {
     const { userId } = req.userData;
     const { wordId, sound } = req.body;
