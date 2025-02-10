@@ -129,4 +129,77 @@ router.delete("/word/delete/:id", authMiddleware, async (req, res) => {
   }
 });
 
+// router.post("/word/sound", authMiddleware, async (req, res) => {
+//   try {
+//     const { userId } = req.userData; // Foydalanuvchi ID'si
+//     const { word, sound } = req.body; // So‘zning _id si va ovoz (true/false)
+
+//     if (!word || typeof sound !== "boolean") {
+//       return res.status(400).json({ message: "Invalid input data" });
+//     }
+
+//     const wordDoc = await wordModel.findById(word); // _id bo‘yicha so‘zni topish
+
+//     if (!wordDoc) {
+//       return res.status(404).json({ message: "Word not found" });
+//     }
+
+//     // Oldin ovoz bergan foydalanuvchini tekshirish
+//     const hasVoted = wordDoc.inspectors.some((ins) => ins.id === userId);
+
+//     if (hasVoted) {
+//       return res
+//         .status(400)
+//         .json({ message: "You have already voted for this word" });
+//     }
+
+//     // Yangi ovoz qo‘shish
+//     wordDoc.inspectors.push({ id: userId, sound });
+
+//     // Foyizni hisoblash
+//     const totalVotes = wordDoc.inspectors.length;
+//     const trueVotes = wordDoc.inspectors.filter((ins) => ins.sound).length;
+//     const trustScore = Math.round((trueVotes / totalVotes) * 100); // Yaxlitlash
+
+//     wordDoc.trustScore = trustScore; // Yangilash
+
+//     // Agar trustScore 80% dan yuqori bo‘lsa, `isChecked = true`
+//     if (trustScore >= 80) {
+//       wordDoc.isChecked = true;
+//     }
+
+//     await wordDoc.save(); // Yangilangan hujjatni saqlash
+
+//     res.json({
+//       message: "Vote recorded",
+//       wordDoc,
+//     });
+//   } catch (error) {
+//     console.error("Error in /word/sound:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+router.get("/word/sound", authMiddleware, async (req, res) => {
+  try {
+    const { userId } = req.userData;
+    const { wordId, sound } = req.body;
+    const updateWord = await wordModel.findByIdAndUpdate(wordId, {
+      isChecked: sound,
+    });
+    res.status(200).json({ status: "success", data: updateWord });
+  } catch (error) {
+    res
+      .status(error.status || 500)
+      .json({ status: "error", message: error.message });
+  }
+});
+
+router.get("/word/:id", async (req, res) => {
+  try {
+    const findWord = await wordModel.findById(req.params.id);
+    res.json({ word: findWord });
+  } catch (error) {}
+});
+
 export default router;

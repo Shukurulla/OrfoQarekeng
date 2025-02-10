@@ -18,6 +18,14 @@ const wordSchema = new mongoose.Schema(
       type: String,
       enum: ["kiril", "latin"],
     },
+    inspectors: {
+      type: Object,
+      default: [],
+    },
+    trustScore: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

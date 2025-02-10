@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import UserRouter from "./routes/user.routes.js";
 import WordRouter from "./routes/word.routes.js";
 import cors from "cors";
+import wordModel from "./models/word.model.js";
 config();
 const app = express();
 
